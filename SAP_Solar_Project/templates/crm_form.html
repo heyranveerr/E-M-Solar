@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}{% if crm_entry %}Edit{% else %}Add{% endif %} CRM Entry - EMSolar{% endblock %}
+
+{% block content %}
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <h1 class="mb-4">{% if crm_entry %}Edit CRM Entry{% else %}Add CRM Entry{% endif %}</h1>
+
+          {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <div class="alert alert-danger">
+                {{ messages[0] }}
+              </div>
+            {% endif %}
+          {% endwith %}
+
+          {% if crm_entry and crm_entry.assigned_to %}
+          <div class="alert alert-info">
+            Assigned to: <strong>{{ crm_entry.assigned_to.username }}</strong>
+          </div>
+          {% endif %}
+
+          <form method="POST">
+            <div class="mb-3">
+              <label for="employee_name" class="form-label">Employee Name</label>
+              <input type="text" class="form-control" id="employee_name" name="employee_name" value="{% if crm_entry %}{{ crm_entry.employee_name }}{% endif %}" {% if current_user.username != 'admin' %}required{% endif %}>
+            </div>
+            <div class="mb-3">
+              <label for="customer_name" class="form-label">Customer Name</label>
+              <input type="text" class="form-control" id="customer_name" name="customer_name" value="{% if crm_entry %}{{ crm_entry.customer_name }}{% endif %}" required>
+            </div>
+            <div class="mb-3">
+              <label for="date" class="form-label">Date</label>
+              <input type="date" class="form-control" id="date" name="date" value="{% if crm_entry %}{{ crm_entry.date.strftime('%Y-%m-%d') }}{% endif %}" required>
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="4" required>{% if crm_entry %}{{ crm_entry.description }}{% endif %}</textarea>
+            </div>
+            <div class="mb-3">
+              <label for="price" class="form-label">Price</label>
+              <input type="number" step="0.01" class="form-control" id="price" name="price" value="{% if crm_entry %}{{ crm_entry.price }}{% endif %}">
+            </div>
+            <div class="mb-3">
+              <label for="status" class="form-label">Status</label>
+              <select class="form-control" id="status" name="status" required>
+                <option value="Pending" {% if crm_entry and crm_entry.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="In Progress" {% if crm_entry and crm_entry.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                <option value="Completed" {% if crm_entry and crm_entry.status == 'Completed' %}selected{% endif %}>Completed</option>
+                <option value="Cancelled" {% if crm_entry and crm_entry.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="ivrm_number" class="form-label">IVRM Number</label>
+              <input type="text" class="form-control" id="ivrm_number" name="ivrm_number" value="{% if crm_entry %}{{ crm_entry.ivrm_number }}{% endif %}">
+            </div>
+            <button type="submit" class="btn btn-primary">{% if crm_entry %}Update{% else %}Add{% endif %} Entry</button>
+            <a href="{{ url_for('crm.crm') }}" class="btn btn-secondary">Cancel</a>
+          </form>
+
+          {% if crm_entry %}
+          <!-- Remarks Section -->
+          <hr class="my-4">
+          <h3>Remarks</h3>
+          
+          <!-- Display existing remarks -->
+          {% if crm_entry.remarks %}
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Previous Remarks</h5>
+              {% for remark in crm_entry.remarks|sort(attribute='remark_date', reverse=True) %}
+              <div class="border-bottom pb-2 mb-2">
+                <p class="mb-1">
+                  <strong>Date: {{ remark.remark_date.strftime('%Y-%m-%d') }}</strong>
+                  <span class="text-muted"> | Added by {{ remark.created_by or 'Unknown' }} on {{ remark.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                </p>
+                <p class="mb-0">{{ remark.remark }}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% else %}
+          <p class="text-muted">No remarks yet.</p>
+          {% endif %}
+
+          <!-- Add new remark form -->
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Add New Remark</h5>
+              <form method="POST" action="{{ url_for('crm.add_remark', id=crm_entry.id) }}">
+                <div class="mb-3">
+                  <label for="remark_date" class="form-label">Remark Date</label>
+                  <input type="date" class="form-control" id="remark_date" name="remark_date" required>
+                </div>
+                <div class="mb-3">
+                  <label for="remark" class="form-label">Remark</label>
+                  <textarea class="form-control" id="remark" name="remark" rows="3" placeholder="Enter your remark here..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Add Remark</button>
+              </form>
+            </div>
+          </div>
+          {% endif %}
+
+          {% if crm_entry %}
+          <!-- Reminder Section -->
+          <hr class="my-4">
+          <h3>Reminders</h3>
+          
+          <!-- Display existing reminders -->
+          {% if crm_entry.reminders %}
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">Current Reminders</h5>
+              {% for reminder in crm_entry.reminders|selectattr('user_id', 'equalto', current_user.id)|sort(attribute='reminder_datetime') %}
+              <div class="border-bottom pb-2 mb-2">
+                <p class="mb-1">
+                  <strong>{{ reminder.reminder_datetime.strftime('%Y-%m-%d') }}</strong>
+                </p>
+                <p class="mb-0">{{ reminder.reminder_text }}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% else %}
+          <p class="text-muted">No reminders set.</p>
+          {% endif %}
+
+          <!-- Add new reminder form -->
+          <div class="card mt-3">
+            <div class="card-body">
+              <h5 class="card-title">Add New Reminder</h5>
+              <form method="POST" action="{{ url_for('crm.add_reminder', crm_id=crm_entry.id) }}">
+                <div class="mb-3">
+                  <label for="reminder_date" class="form-label">Reminder Date</label>
+                  <input type="date" class="form-control" id="reminder_date" name="reminder_date" required>
+                  <small class="form-text text-muted">Reminder will appear throughout the entire day when you log in.</small>
+                </div>
+                <div class="mb-3">
+                  <label for="reminder_text" class="form-label">Reminder Text</label>
+                  <textarea class="form-control" id="reminder_text" name="reminder_text" rows="2" placeholder="Enter reminder text..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-warning">Set Reminder</button>
+              </form>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+{% endblock %}

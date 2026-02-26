@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Import BBU Supply Items - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Import BBU Supply Items for Project: {{ project.name }}</h2>
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="POST" action="/projects/{{ project.id }}/import_bbu_supply" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="file" class="form-label">Upload CSV File for BBU Supply Items</label>
+        <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Import BBU Supply Items</button>
+    <a href="/projects/{{ project.id }}" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,120 @@
+,,,,,,,,,,,,
+Client ,"Saatvik Agro products Morena, MP",,,,,,,,,,,
+Project Capacity AC-KW," 1,300.00 ",,,,,,,,,,,
+Project Capacity DC KWp," 1,695.27 ",,,,,,,,,,,
+SCOPE OF WORK,,,,,,,,,,,,
+,,,815,499,444,,,, Scope of Work ,,,
+S.No.,Item Description,SPECIFICATION,Qty,Qty,Qty,Total ,UOM,MAKE, Supply , Service ,Rate ,Amount 
+PV Section,,,Process P,FMG-1,Storage,,,,,,,
+1,Solar PV module (Wp),PV Module 405Wp,220,1232,874,2314,Nos.,Saatvik,Saatvik,Contractor,,
+2,Solar PV module (Wp),PV Module 445Wp,1474,0,0,1704,Nos.,Saatvik,Saatvik,Contractor,,
+3,Solar PV module (Wp),PV Module 585Wp,120,0,120,0,Nos.,Saatvik,Saatvik,Contractor,,
+4,MC4 Connector,"MC4 Male & Female Field side connector (MC4 compatible, IP67)",363,246,199,609,Lot,Elmex,Contractor,Contractor,40,24368
+5,String Inverter,LT String inverter 50KW,13,8,8,26,Nos.,Saatvik,Saatvik,Contractor,0,0
+6,Remote Monitoring system - Web based,Web based Datalogger for minitoring ,1,1,1,3,Nos.,Suryalogix/Power AMR,Contractor,Contractor,50000,150000
+7,Zero Export devise,,1,0,0,1,Nos.,Suryalogix/Power AMR,Contractor,Contractor,2500000,
+8,Communication Cable,RS485 Armourd shielded cable for communication inverter to inverter,316,250,270,836,Mtrs,D-Link/Polycab/Beldan,Contractor,Contractor,,
+9,"DWC Conduit, Size of 32mm OD",Schedule 40 UV Protected,316,250,270,836,Mtrs,Supreme/Titupati/Reputed,Contractor,Contractor,,
+10,L-JOINT PVC 32mm,Schedule 40 UV Protected,120,120,120,360,Nos.,Supreme/Titupati/Reputed,Contractor,Contractor,,
+11,T-JOINT PVC 32mm,Schedule 40 UV Protected,120,120,120,360,Nos.,Supreme/Titupati/Reputed,Contractor,Contractor,,
+12,Weather Monitoring Station (Reference Cell Radiation Sensor),"1. Radiation sensor. (2 Nos)
+2. Temperature Sensor - Ambient (1 Nos)
+3. Temperature Sensor - Module (1 Nos)",1,0,0,1,Set,Webdyn/Trinity/Suryalogix,Contractor,Contractor,,
+" Structures, Walkway Railing & life line ",,,,,,,,,,,,
+13,MMS,Standing seam type  Al anodized H clamp with hardware & other accessories,815,499,444,1695,KWp,Reputed make,Contractor,Contractor,,
+14,Walkway,FRP Walkway 300 width x 25mm ,940,795,480,1610,RM,Reputed make,Contractor,Contractor,,
+15,Walway clamps,Mounting clamps & accessries,1880,1590,960,1,Lot,Reputed make,Contractor,Contractor,,
+16,Safety life line ,Stainless steel type life line with Standing seam clamp type structre support  as per approved drawing,336,270,210,735,RM,Reputed make,Contractor,Contractor,,
+17,Handrail,FRP 800 MM height with mounting arrangement,,,,250,RM,Reputed make,,,,
+DC side - Cables & Accessories,,,,,,,,,,,,
+18,DC Cable (1Cx4mm² (+VE & -ve)),"1 Core 4 Sqmm Cu 1.5kV , UV protected XLPO Solar Grade Cable - EN 50618
+IS-1554 Part-1,Temp range:- 10Deg C to +120Deg C,Voltage range-1.5KV,excellent resistance to heat,cold,water,oil,abrasion,UV radiation, flexible. Life of cable-more then 25 year. Cable should be annealed Hight conduction copper conductor with XLPO insulation,UV protected.XLPO having working voltage- 1500V,UV resistant for outdoor installation IS/IEC 69947,For AC/DC cables Voltage drop= 1% limited",4484,2745,2445,9674,Lot,KEI/HAVELLS/APAR/UNIVERSAL/Sichem,Contractor,Contractor,,
+19,"DWC Conduit, Size of 40mm OD",Schedule 40 UV Protected,1200,1200,1200,3600,Lot,SUPREME/TIRUPATI/REPUTED,Contractor,Contractor,21,75600
+20,L-JOINT PVC 40mm,Schedule 40 UV Protected,80,80,80,240,Lot,SUPREME/TIRUPATI/REPUTED,Contractor,Contractor,,
+21,T-JOINT PVC 40mm,Schedule 40 UV Protected,130,130,130,390,Lot,SUPREME/TIRUPATI/REPUTED,Contractor,Contractor,,
+22,MISC Items,"GI Saddle, Silicon & Accessories",1,1,1,3,Lot,,Contractor,Contractor,,
+AC side - Cables & Accessories ,,,,,,,,,,,,
+23,"AC Cable 
+(For Inverter  to LT PANEL)","3.5C X 50 sq.mm AL. A. XLPE Cable 1.1kV (For Inverter  to LT PANEL)
+Cable shall be stranded AL. AR. conductor  with XLPE insulation, UV protected , 1.1KV, temp range -10ºC to +80ºC   overall XLPE insulation for outdoors, FRLS TYPE",2080,1520,1280," 4,880.00 ",Lot,POLYCAB/KEI/HAVELLS/APAR/UNIVERSAL/Gems,Contractor,Contractor,,
+24,"AC Cable 
+( LT PANEL to Existing panel )","3.5C X 300 sq.mm AL. A. XLPE Cable 1.1kV (For Inverter  to LT PANEL)
+Cable shall be stranded AL. AR. conductor  with XLPE insulation, UV protected , 1.1KV, temp range -10ºC to +80ºC   overall XLPE insulation for outdoors, FRLS TYPE",100,50,50, 200.00 ,Lot,POLYCAB/KEI/HAVELLS/APAR/UNIVERSAL/Gems,Contractor,Contractor,,
+25,Double compression Cable Gland & Accessries,"For All types of cable required,",0,0,0, -   ,Lot,Reputed make,Contractor,Contractor,,
+26,"LUGs (Cu, Al, Bi-metalic)",As per requirement,39,21,21, 81.00 ,Lot,Reputed make,Contractor,Contractor,,
+27,Heat shrinkable sleeve,for all cables ,1,1,1, 3.00 ,Lot,,Contractor,Contractor,,
+28,LT PANEL (8in-1out),"As per specfification
+415V LT Panel : 9 in1-out LT Panel indoor compartment type 
+- 100A 4P MCCB  nos input  and 800A MCCB output 
+- MFM meter with RS485 commiunication 
+",2,1,1, 4.00 ,Nos.,"CUSTOM MADE
+SWITCHGEAR MAKE - ABB/SIEMENS/L&T/SCHNEIDER",Contractor,Contractor,,
+29,LT PANEL (6 in-1out),"As per specfification
+415V LT Panel : 6 in1-out LT Panel indoor compartment type 
+- 100A 4P MCCB  nos input  and 800A MCCB output 
+- MFM meter with RS485 commiunication 
+",,,,,Nos,"CUSTOM MADE
+SWITCHGEAR MAKE - ABB/SIEMENS/L&T/SCHNEIDER",,,,
+30,Extension Panel,"Extention Panel with 800A MCCB
+",2,0,0, 2.00 ,Nos.,"CUSTOM MADE
+SWITCHGEAR MAKE - ABB/SIEMENS/L&T/SCHNEIDER",Contractor,Contractor,,
+31,"1C 16 sq.mm cu flexible 
+ (Cable for earthing - Inverter Earthing)",Inverter Earthing & LT Panel,100,100,100, 300.00 ,Lot,Reputed,Contractor,Contractor,,
+32,1C x 2.5 Sqmm Cu Cable,Module To module Earthing,599,407,328," 1,333.20 ",Lot,Reputed,Contractor,Contractor,,
+33,1C X 70 Sqmm Cu Cable,LA Earthing,75,50,50, 175.00 ,Lot,Reputed,Contractor,Contractor,,
+Earthing- Cables Lugs - Lumpsum Items,,,,,, -   ,,,,,,
+34,Earthing Hardware,SS Hardware M4 x 15mm for module earthing ,#REF!,#REF!,#REF!, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+35,Earthing Hardware,M6 x 30 with nut + double washer,600,600,600, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+36,Earthing Hardware,M8 x 30 with nut + double washer,100,100,100, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+MISCELLANEOUS,,,,,, -   ,,,,,,
+37,Cable Ties & MC4 Clips,UV Protected Sizes-As per requirement,1,1,1, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+38,Cable Tray- DC Side,Pre GI Perforated with cover & Fixing accessories. Support angles & stands,1,1,1, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+39,Cable Tray-AC Side,"Pre GILadder type, & Fixing accessories. Support angles & stands",1,1,1, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+40,Danger Boards & Safety Tags,"Building evacuation plan and direction signs, assembly points Signages ",1,1,1, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+41,Fire Fighting System ,DCP ABC/POWDER Type - 6 Kg - IS 2171 & IS 10658 Marked ,1,1,1, 6.00 ,Nos,Reputed,Contractor,Contractor,,
+42,Fire Fighting System ,CO2 Type - 6 Kg - IS 2171 & IS 10658 Marked,1,1,1, 3.00 ,Nos,Reputed,Contractor,Contractor,,
+43,Fire Fighting System ,SAND BUCKET STAND WITH 3 BUCKET ARRANEGEMNT & COMPLETE ACCESSORIES - 24 SWG - IS 2546,1,1,1, 3.00 ,Nos,Reputed,Contractor,Contractor,,
+44,Ferrules & Cable tags,"Printed tube type
+Appropriate Cable Tags ( At all Power & AUX cables Terminal Points Metallic Tags to be provided ) ",1,1,1, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+45,Foam Sealent,Silicon Based - Sealing for conduit openings,1,1,1, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+46,STICKER & Marking,Equipment marking. Radium Based with Strong Adhesive,1,1,1, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+47,Electrical Tape,"RED, YELLOW, BLUE, BLACK, GREEN ( Each 5)",1,1,1, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+48,Inverter Stand with Canopy ,As per approved drawing ,13,8,8, 26.00 ,Nos.,Reputed,Contractor,Contractor,,
+49,Insualtion Mat,As per IS & 1.1 KV Voltage grade. Insualtion rubber mats 1 meter x 2 meter,4,4,4, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+EARTHING & LIGHTNING PROTECTION,,,,,, -   ,,,,,,
+50,Earthing ,GI Strip 25X3 mm,1300,1300,1300, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+51,Earthing ,GI Strip 25X6 mm,1300,1300,1300, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+52,Earthing ,"Chemical Earthing Pit As Per IS 3043, - ARRAY YARD EARTHING &
+A) 17.2 MM Dia, 3 MTS Height Cu Coated(250 Microns) Steel Rod, T Joints For Earth Strip Connection
+B) Chemical Earthing Backfill Compound, 22.5 Kg
+C) Pre Cast RCC Chamber
+Adhension/Bending/Environment test/UL Approved/Cu purity test, Micron Coating for Earth Electrode
+Ph Value, Leaching test, Resistivity test & Strength test for backfill chemical",15,10,15, 32.00 ,Set,SABOO/VNT/true Power,Contractor,Contractor,,
+53,Red insulator with hardware ,Size-40MM which to joint with roof sheet with fixing clamps,100,,, 1.00 ,Lot,Reputed,Contractor,Contractor,,
+54,"Lighting Arrestor as per IEC -68-2-52 Part 2,.ESE Type NFC17-102(2011) with Strike counters","Lighting Rods with 5Mtr Length Level 3 with accessories(GI mast, stray wire with fixing accessories)
+Insulators & Accessories for earth strip - Plastic/Ceramic - 50 MM Width  - With suitable mounting arrangement (For Roof mounted & LA)",1,1,1, 3.00 ,Nos.,SABOO/VNT/true Power,Contractor,Contractor,,
+Module cleaning System,,,,,, -   ,,,,,,
+55,MCS ,"Manual Module cleaning system with UPVC piping network and 3 Nos Booster pump & Brass nozzles. Hose Pipe-100 Mtr for each bulding, Wiper
+Incl. Electrical connection & Canopy",815,499,444, 1.00 ,Lot,ASTRAL/APL APOLLO/DURALINE/SUPREME/TIRUPATI/REPUTED,Contractor,Contractor,,
+I&C,,,,,, -   ,,,,,,
+56,LT Panel foundation ,- LT panel foundation as per approved drawing ,2,1,1, 4.00 ,No,REPUTED,Contractor,Contractor,,
+57,Earthing pit chamber,- Earthing pit chamber 350mm x 350mm,15,10,10, 35.00 ,Nos ,REPUTED,Contractor,Contractor,,
+58,Electrical & MMS ,"Installation & testing, pre commissioning of all equipments including cabling, termination, mounting, road cutting,hume pipe installation,housekeeping, white wash of foundation, MS fabrication, suppots, all required fitting, loading, unloading shifting of material, Tools, tackles, equipment, machinery-Hydra, forklift, ladder, water, electricity for construction, paint work,RCC cutting, material reconciliation, testing of equipments, support work for CEIG/Govt. approvals.",815.23,498.96,444.42," 1,695.27 ",KWp,,Contractor,Contractor,,
+59,Consumables ,All type of consumables required as per site condition,1,1,1, 1.00 ,Lot,Reputes,Contractor,Contractor,,
+60,CEIG Approval,,815.23,499,444," 1,695.27 ",KWp,,Contractor,Contractor,,
+,Net Metering ,"All Statutory approvals & Metering cubical along with Meter, CT, PT as per discomm Standards",,,, 400.00 ,KW ,,Contractor,Contractor,,
+61,Safety,"All required PPEs/First Ad Kit  ISI marked or as per client's requirement, Comply with Client's EHS policy. And Third party inspection of machinery & equipments if required",1,1,1, 1.00 ,Lot,,Contractor,Contractor,,
+62,Labor compliance,"All required labor compliances like-PF,ESI,WC policy, EAR policy,GPA etc",1,1,1, 1.00 ,Lot,,Contractor,Contractor,,
+63,Supply Misc,"All Misc Items - C class Items not included in BOQ, support structure, fittings",1,1,1, 3.00 ,Lot,,Contractor,Contractor,,
+64,MS Painted Step 2 Mtr each side,With handle for Roof monitoring crossing,,,, 3.00 ,Set,,Contractor,Contractor,,
+65,MS Painted sky light protection,with Wire mess and fixing accessories,,,, 1.00 ,Lot,,Contractor,Contractor,,
+,,,,,,,,,,,,
+Note :,,,,,,,,,,,,
+"Above mentioned quantities are on estimate basis, these may vary +/- 10%",,,,,,,,,,,,
+Statutory fees shall be reimburse on submission of actual challan/bill,,,,,,,,,,,,
+All Material shall be dispatch on the issue of the MDCC By client,,,,,,,,,,,,
+"Loading & Unloading , shifting of free Issue items shall be in the scope of the contractor",,,,,,,,,,,,
+"Arrangement of Electricty, water shall be in the scope of the contractor",,,,,,,,,,,,
+Any other material requirement for the successful commissiong of the plant which is not mentioned in the above BOQ will be in the scope of the contractor,,,,,,,,,,,,
+,,,,,,,,,,,,
+Completion Time- 60 Days from the date of PO/Advance,,,,,,,,,,,,

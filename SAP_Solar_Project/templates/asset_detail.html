@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Asset Details - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Asset Details</h2>
+<p><strong>Asset Name:</strong> {{ asset.asset_name }}</p>
+<p><strong>Last Maintenance:</strong> {{ asset.last_maintenance }}</p>
+<p><strong>Status:</strong> {{ asset.status }}</p>
+
+<a href="/assets/{{ asset.id }}/edit" class="btn btn-warning">Edit Asset</a>
+<form action="/assets/{{ asset.id }}/delete" method="POST" class="d-inline">
+    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this asset?');">Delete Asset</button>
+</form>
+<a href="/assets" class="btn btn-secondary ms-2">Back to Assets</a>
+{% endblock %}

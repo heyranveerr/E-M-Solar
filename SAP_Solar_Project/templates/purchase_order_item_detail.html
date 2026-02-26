@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase Order Item Details - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Purchase Order Item Details</h2>
+<p><strong>Material Code:</strong> {{ item.material_code or 'N/A' }}</p>
+<p><strong>Description:</strong> {{ item.description or 'N/A' }}</p>
+<p><strong>HSN/SAC:</strong> {{ item.hsn_sac or 'N/A' }}</p>
+<p><strong>Unit:</strong> {{ item.unit or 'N/A' }}</p>
+<p><strong>Quantity:</strong> {{ item.quantity or 'N/A' }}</p>
+<p><strong>Rate:</strong> {{ item.rate or 'N/A' }}</p>
+<p><strong>Discount:</strong> {{ item.discount or 'N/A' }}</p>
+<p><strong>Taxable Value:</strong> {{ item.taxable_value or 'N/A' }}</p>
+<p><strong>IGST Rate:</strong> {{ item.igst_rate or 'N/A' }}</p>
+<p><strong>IGST Amount:</strong> {{ item.igst_amount or 'N/A' }}</p>
+<p><strong>Sub Total:</strong> {{ item.sub_total or 'N/A' }}</p>
+
+<a href="/purchase_orders/{{ item.po_id }}" class="btn btn-secondary">Back to Purchase Order</a>
+{% endblock %}

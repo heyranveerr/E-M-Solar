@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if project %}Edit Project{% else %}Add Project{% endif %} - EMSolar
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">{% if project %}Edit Project{% else %}Add New Project{% endif %}</h2>
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+<form method="POST" action="{% if project %}/projects/{{ project.id }}/edit{% else %}/projects{% endif %}">
+    <div class="mb-3">
+        <label for="name" class="form-label">Project Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ project.name if project else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="capacity_mw" class="form-label">Capacity (AC-MW/DC-MW)</label>
+        <input type="text" class="form-control" id="capacity_mw" name="capacity_mw" value="{{ project.capacity_mw if project else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="budget" class="form-label">Budget</label>
+        <input type="number" step="0.01" class="form-control" id="budget" name="budget" value="{{ project.budget if project else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <input type="text" class="form-control" id="status" name="status" value="{{ project.status if project else '' }}" required>
+    </div>
+
+    <h4 class="mt-4">Finance Summary (from BBU)</h4>
+    <div class="mb-3">
+        <label for="finance_supply_price" class="form-label">Supply Price</label>
+        <input type="number" step="0.01" class="form-control" id="finance_supply_price" name="finance_supply_price" value="{{ project.finance_supply_price if project and project.finance_supply_price else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="finance_service_price" class="form-label">Service Price</label>
+        <input type="number" step="0.01" class="form-control" id="finance_service_price" name="finance_service_price" value="{{ project.finance_service_price if project and project.finance_service_price else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="finance_total_price" class="form-label">Total Price</label>
+        <input type="number" step="0.01" class="form-control" id="finance_total_price" name="finance_total_price" value="{{ project.finance_total_price if project and project.finance_total_price else '' }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">{% if project %}Update Project{% else %}Add Project{% endif %}</button>
+    <a href="/projects" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

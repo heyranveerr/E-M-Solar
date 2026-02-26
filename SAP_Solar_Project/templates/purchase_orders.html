@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase Orders - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Purchase Order List</h2>
+<a href="/purchase_orders/new" class="btn btn-primary mb-3">Add New Purchase Order</a>
+<a href="/purchase_orders/import_csv" class="btn btn-info mb-3 ms-2">Import Purchase Orders from CSV</a>
+<ul class="list-group">
+    {% for po in purchase_orders %}
+    <li class="list-group-item">
+        <a href="/purchase_orders/{{ po.id }}">{{ po.po_number }}</a> - {{ po.vendor_name }} ({{ po.po_date }})
+    </li>
+    {% else %}
+    <li class="list-group-item">No purchase orders found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

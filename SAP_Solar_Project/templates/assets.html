@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Assets - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Asset List</h2>
+<a href="/assets/new" class="btn btn-primary mb-3">Add New Asset</a>
+<ul class="list-group">
+    {% for asset in assets %}
+    <li class="list-group-item">
+        <a href="/assets/{{ asset.id }}">{{ asset.asset_name }}</a> - {{ asset.status }}
+    </li>
+    {% else %}
+    <li class="list-group-item">No assets found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

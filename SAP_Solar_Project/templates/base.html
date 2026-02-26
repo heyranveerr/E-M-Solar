@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}EMSolar{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='EM_LOGO.png') }}" alt="EM Logo" style="height: 60px;"></a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/projects">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/assets">Assets</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/finance">Finance</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/purchase_orders">Purchase Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/crm">CRM</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            {% if current_user.is_authenticated %}
+              <!-- Bell Icon with Reminders Dropdown -->
+              <li class="nav-item dropdown">
+                <button class="btn btn-link nav-link position-relative dropdown-toggle" id="reminderBell" data-bs-toggle="dropdown" aria-expanded="false" style="border: none; padding: 0.5rem 1rem;">
+                  <i class="bi bi-bell-fill" style="font-size: 1.5rem;"></i>
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="reminderBadge" style="display: none;">
+                    0
+                  </span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" id="reminderDropdown" style="max-height: 400px; overflow-y: auto; min-width: 350px;">
+                  <div class="dropdown-header">Reminders</div>
+                  <div id="reminderUnseenContainer"></div>
+                  <div id="reminderSeenContainer"></div>
+                  <div id="reminderEmptyState">
+                    <div class="dropdown-item text-muted text-center py-3">No reminders</div>
+                  </div>
+                </div>
+              </li>
+              
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-3">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Reminder Modal -->
+    <div class="modal fade" id="reminderModal" tabindex="-1" aria-labelledby="reminderModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header bg-warning">
+            <h5 class="modal-title" id="reminderModalLabel">
+              <i class="bi bi-bell-fill"></i> CRM Reminders
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="reminderModalBody">
+            <!-- Reminders will be populated here -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
+    {% if current_user.is_authenticated %}
+    <script>
+      // Load reminders for bell icon
+      function loadReminders() {
+        fetch('/crm/get_all_reminders')
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              const unseenContainer = document.getElementById('reminderUnseenContainer');
+              const seenContainer = document.getElementById('reminderSeenContainer');
+              const badge = document.getElementById('reminderBadge');
+              const emptyState = document.getElementById('reminderEmptyState');
+              
+              unseenContainer.innerHTML = '';
+              seenContainer.innerHTML = '';
+              
+              // Show unseen reminders
+              if (data.unseen && data.unseen.length > 0) {
+                const unseenHeader = document.createElement('div');
+                unseenHeader.className = 'dropdown-header small text-secondary';
+                unseenHeader.textContent = 'Unseen Reminders';
+                unseenContainer.appendChild(unseenHeader);
+                
+                data.unseen.forEach(reminder => {
+                  const item = document.createElement('a');
+                  item.href = '/crm/edit/' + reminder.crm_id;
+                  item.className = 'dropdown-item';
+                  item.style.backgroundColor = '#E3F2FD';
+                  item.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div style="flex: 1;">
+                        <strong>${reminder.crm_name}</strong><br>
+                        <small>${reminder.reminder_date}</small><br>
+                        <small class="text-muted">${reminder.reminder_text}</small>
+                      </div>
+                    </div>
+                  `;
+                  
+                  item.addEventListener('click', function(e) {
+                    // Mark as seen when clicked
+                    fetch('/crm/mark_reminder_seen/' + reminder.id, {method: 'POST'})
+                      .then(() => loadReminders());
+                  });
+                  
+                  unseenContainer.appendChild(item);
+                });
+              }
+              
+              // Show seen reminders
+              if (data.seen && data.seen.length > 0) {
+                const seenHeader = document.createElement('div');
+                seenHeader.className = 'dropdown-header small text-secondary';
+                seenHeader.textContent = 'Seen Reminders';
+                seenContainer.appendChild(seenHeader);
+                
+                data.seen.forEach(reminder => {
+                  const item = document.createElement('a');
+                  item.href = '/crm/edit/' + reminder.crm_id;
+                  item.className = 'dropdown-item';
+                  item.style.backgroundColor = 'white';
+                  item.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div style="flex: 1;">
+                        <strong>${reminder.crm_name}</strong><br>
+                        <small>${reminder.reminder_date}</small><br>
+                        <small class="text-muted">${reminder.reminder_text}</small>
+                      </div>
+                    </div>
+                  `;
+                  
+                  seenContainer.appendChild(item);
+                });
+              }
+              
+              // Show/hide empty state
+              if (data.unseen.length === 0 && data.seen.length === 0) {
+                emptyState.style.display = 'block';
+              } else {
+                emptyState.style.display = 'none';
+              }
+              
+              // Update badge
+              if (data.unseen_count > 0) {
+                badge.textContent = data.unseen_count;
+                badge.style.display = 'inline-block';
+              } else {
+                badge.style.display = 'none';
+              }
+            }
+          })
+          .catch(error => console.error('Error loading reminders:', error));
+      }
+      
+      // Load reminders on page load
+      document.addEventListener('DOMContentLoaded', function() {
+        loadReminders();
+        
+        // Reload reminders when dropdown is opened
+        const reminderBell = document.getElementById('reminderBell');
+        if (reminderBell) {
+          reminderBell.addEventListener('click', function() {
+            loadReminders();
+          });
+        }
+        
+        // Check for pending reminders and show modal only once per login session
+        console.log('Checking for pending reminders...');
+        
+        // Check if modal has already been shown in this session
+        if (!sessionStorage.getItem('reminderModalShown')) {
+          fetch('/crm/get_pending_reminders')
+            .then(response => {
+              console.log('Response status:', response.status);
+              return response.json();
+            })
+            .then(data => {
+              console.log('Today reminders data:', data);
+              if (data.reminders && data.reminders.length > 0) {
+                console.log('Found ' + data.reminders.length + ' today reminders');
+                const modalBody = document.getElementById('reminderModalBody');
+                if (!modalBody) {
+                  console.error('Modal body element not found!');
+                  return;
+                }
+                
+                modalBody.innerHTML = '';
+                
+                data.reminders.forEach(reminder => {
+                  console.log('Adding reminder:', reminder);
+                  const reminderCard = document.createElement('div');
+                  reminderCard.className = 'card mb-3';
+                  reminderCard.innerHTML = `
+                    <div class="card-body">
+                      <h6 class="card-title">CRM: ${reminder.crm_name}</h6>
+                      <p class="card-text"><strong>Date:</strong> ${reminder.reminder_date}</p>
+                      <p class="card-text">${reminder.reminder_text}</p>
+                      <a href="/crm/edit/${reminder.crm_id}" class="btn btn-sm btn-outline-primary">View CRM</a>
+                    </div>
+                  `;
+                  modalBody.appendChild(reminderCard);
+                });
+                
+                // Show the modal
+                const reminderModalElement = document.getElementById('reminderModal');
+                if (reminderModalElement) {
+                  const reminderModal = new bootstrap.Modal(reminderModalElement);
+                  reminderModal.show();
+                  console.log('Modal shown');
+                  
+                  // Mark that modal has been shown in this session
+                  sessionStorage.setItem('reminderModalShown', 'true');
+                } else {
+                  console.error('Modal element not found!');
+                }
+              } else {
+                console.log('No today reminders found or no reminders array');
+              }
+            })
+            .catch(error => {
+              console.error('Error fetching reminders:', error);
+            });
+        } else {
+          console.log('Modal already shown in this session');
+        }
+      });
+    </script>
+    {% endif %}
+  </body>
+</html>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if material %}Edit Material{% else %}Add Material{% endif %} - EMSolar
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">{% if material %}Edit Material{% else %}Add New Material{% endif %}</h2>
+<form method="POST" action="{% if material %}/materials/{{ material.id }}/edit{% else %}/materials{% endif %}">
+    {% if material %}
+        <input type="hidden" name="project_id" value="{{ material.project_id }}">
+    {% elif project_id %}
+        <input type="hidden" name="project_id" value="{{ project_id }}">
+    {% endif %}
+
+    <div class="mb-3">
+        <label for="name" class="form-label">Material Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ material.name if material else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="specification" class="form-label">Specification</label>
+        <input type="text" class="form-control" id="specification" name="specification" value="{{ material.specification if material else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input type="number" step="0.01" class="form-control" id="quantity" name="quantity" value="{{ material.quantity if material else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="uom" class="form-label">Unit of Measure (UOM)</label>
+        <input type="text" class="form-control" id="uom" name="uom" value="{{ material.uom if material else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="make" class="form-label">Make</label>
+        <input type="text" class="form-control" id="make" name="make" value="{{ material.make if material else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="supply" class="form-label">Supply</label>
+        <input type="number" step="0.01" class="form-control" id="supply" name="supply" value="{{ material.supply if material else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="service" class="form-label">Service</label>
+        <input type="number" step="0.01" class="form-control" id="service" name="service" value="{{ material.service if material else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="rate" class="form-label">Rate</label>
+        <input type="number" step="0.01" class="form-control" id="rate" name="rate" value="{{ material.rate if material else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="amount" class="form-label">Amount</label>
+        <input type="number" step="0.01" class="form-control" id="amount" name="amount" value="{{ material.amount if material else '' }}">
+    </div>
+    <button type="submit" class="btn btn-primary">{% if material %}Update Material{% else %}Add Material{% endif %}</button>
+    <a href="{% if project_id %}/projects/{{ project_id }}{% else %}/materials{% endif %}" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

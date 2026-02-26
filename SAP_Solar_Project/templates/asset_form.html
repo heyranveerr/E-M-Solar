@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if asset %}Edit Asset{% else %}Add Asset{% endif %} - EMSolar
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">{% if asset %}Edit Asset{% else %}Add New Asset{% endif %}</h2>
+<form method="POST" action="{% if asset %}/assets/{{ asset.id }}/edit{% else %}/assets{% endif %}">
+    <div class="mb-3">
+        <label for="asset_name" class="form-label">Asset Name</label>
+        <input type="text" class="form-control" id="asset_name" name="asset_name" value="{{ asset.asset_name if asset else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="last_maintenance" class="form-label">Last Maintenance Date</label>
+        <input type="date" class="form-control" id="last_maintenance" name="last_maintenance" value="{{ asset.last_maintenance or '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <input type="text" class="form-control" id="status" name="status" value="{{ asset.status if asset else '' }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">{% if asset %}Update Asset{% else %}Add Asset{% endif %}</button>
+    <a href="/assets" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

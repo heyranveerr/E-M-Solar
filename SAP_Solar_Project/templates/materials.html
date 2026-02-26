@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Materials - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Material List</h2>
+<a href="/materials/new" class="btn btn-primary mb-3">Add New Material</a>
+<ul class="list-group">
+    {% for material in materials %}
+    <li class="list-group-item">
+        <a href="/materials/{{ material.id }}">{{ material.material_name }}</a> - {{ material.quantity }} {{ material.unit }}
+    </li>
+    {% else %}
+    <li class="list-group-item">No materials found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

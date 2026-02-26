@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Material Details - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Material Details</h2>
+<p><strong>Material Name:</strong> {{ material.name or 'N/A' }}</p>
+<p><strong>Specification:</strong> {{ material.specification or 'N/A' }}</p>
+<p><strong>Qty Process P:</strong> {{ material.qty_process_p or 'N/A' }}</p>
+<p><strong>Qty FMG1:</strong> {{ material.qty_fmg1 or 'N/A' }}</p>
+<p><strong>Qty Storage:</strong> {{ material.qty_storage or 'N/A' }}</p>
+<p><strong>Total Qty:</strong> {{ material.total_qty or 'N/A' }}</p>
+<p><strong>UOM:</strong> {{ material.uom or 'N/A' }}</p>
+<p><strong>Make:</strong> {{ material.make or 'N/A' }}</p>
+<p><strong>Supply:</strong> {{ material.supply or 'N/A' }}</p>
+<p><strong>Service:</strong> {{ material.service or 'N/A' }}</p>
+<p><strong>Rate:</strong> {{ material.rate or 'N/A' }}</p>
+<p><strong>Amount:</strong> {{ material.amount or 'N/A' }}</p>
+
+<a href="/materials/{{ material.id }}/edit" class="btn btn-warning">Edit Material</a>
+<form action="/materials/{{ material.id }}/delete" method="POST" class="d-inline">
+    <input type="hidden" name="project_id" value="{{ material.project_id }}">
+    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this material?');">Delete Material</button>
+</form>
+<a href="{% if material.project_id %}/projects/{{ material.project_id }}{% else %}/materials{% endif %}" class="btn btn-secondary ms-2">Back</a>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Add Purchase Order Item - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Add Item to Purchase Order</h2>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<form method="POST">
+    <div class="mb-3">
+        <label for="material_code" class="form-label">Material Code</label>
+        <input type="text" class="form-control" id="material_code" name="material_code">
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description" required>
+    </div>
+    <div class="mb-3">
+        <label for="hsn_sac" class="form-label">HSN/SAC</label>
+        <input type="text" class="form-control" id="hsn_sac" name="hsn_sac">
+    </div>
+    <div class="mb-3">
+        <label for="unit" class="form-label">Unit</label>
+        <input type="text" class="form-control" id="unit" name="unit" required>
+    </div>
+    <div class="mb-3">
+        <label for="quantity" class="form-label">Quantity</label>
+        <input type="number" step="any" class="form-control" id="quantity" name="quantity" required>
+    </div>
+    <div class="mb-3">
+        <label for="rate" class="form-label">Rate</label>
+        <input type="number" step="any" class="form-control" id="rate" name="rate" required>
+    </div>
+    <div class="mb-3">
+        <label for="discount" class="form-label">Discount</label>
+        <input type="number" step="any" class="form-control" id="discount" name="discount" value="0">
+    </div>
+    <div class="mb-3">
+        <label for="taxable_value" class="form-label">Taxable Value</label>
+        <input type="number" step="any" class="form-control" id="taxable_value" name="taxable_value" required>
+    </div>
+    <div class="mb-3">
+        <label for="igst_rate" class="form-label">IGST Rate</label>
+        <input type="number" step="any" class="form-control" id="igst_rate" name="igst_rate" value="0">
+    </div>
+    <div class="mb-3">
+        <label for="igst_amount" class="form-label">IGST Amount</label>
+        <input type="number" step="any" class="form-control" id="igst_amount" name="igst_amount" value="0">
+    </div>
+    <div class="mb-3">
+        <label for="sub_total" class="form-label">Sub Total</label>
+        <input type="number" step="any" class="form-control" id="sub_total" name="sub_total" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Item</button>
+    <a href="/purchase_orders/{{ po.id }}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}

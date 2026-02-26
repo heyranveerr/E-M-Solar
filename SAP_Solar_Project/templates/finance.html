@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Finance - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Finance Transaction List</h2>
+<a href="/finance/new" class="btn btn-primary mb-3">Add New Transaction</a>
+<ul class="list-group">
+    {% for transaction in transactions %}
+    <li class="list-group-item">
+        <a href="/finance/{{ transaction.id }}">{{ transaction.transaction_type }}</a> - {{ transaction.amount }} ({{ transaction.date }})
+    </li>
+    {% else %}
+    <li class="list-group-item">No finance transactions found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

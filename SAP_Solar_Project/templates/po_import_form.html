@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Import Purchase Orders - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Import Purchase Orders from CSV</h2>
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+<form method="POST" action="/purchase_orders/import_csv" enctype="multipart/form-data">
+    <div class="mb-3">
+        <label for="file" class="form-label">Upload CSV File for Purchase Orders</label>
+        <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Import Purchase Orders</button>
+    <a href="/purchase_orders" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Purchase Order Details - EMSolar{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">Purchase Order Details</h2>
+<p><strong>PO Number:</strong> {{ po.po_number }}</p>
+<p><strong>PO Date:</strong> {{ po.po_date }}</p>
+<p><strong>Vendor Name:</strong> {{ po.vendor_name }}</p>
+<p><strong>Vendor Code:</strong> {{ po.vendor_code }}</p>
+<p><strong>Shipped To Name:</strong> {{ po.shipped_to_name }}</p>
+<p><strong>Shipped To Address:</strong> {{ po.shipped_to_address }}</p>
+<p><strong>Bill To Name:</strong> {{ po.bill_to_name }}</p>
+<p><strong>Bill To Address:</strong> {{ po.bill_to_address }}</p>
+<p><strong>Total Tax Amount:</strong> {{ po.total_tax_amount }}</p>
+<p><strong>Grand Total:</strong> {{ po.grand_total }}</p>
+
+<h4 class="mt-4">Additional PO Details</h4>
+<p><strong>IEC Code No.:</strong> {{ po.iec_code_no }}</p>
+<p><strong>Contact Person:</strong> {{ po.contact_person }}</p>
+<p><strong>Contact Email ID:</strong> {{ po.contact_email_id }}</p>
+<p><strong>Payment Terms:</strong> {{ po.payment_terms }}</p>
+<p><strong>Inco Terms:</strong> {{ po.inco_terms }}</p>
+<p><strong>Header Text:</strong> {{ po.header_text }}</p>
+
+<a href="/purchase_orders/{{ po.id }}/edit" class="btn btn-warning">Edit Purchase Order</a>
+<a href="/purchase_orders/{{ po.id }}/add_item" class="btn btn-primary ms-2">Add Item</a>
+<form action="/purchase_orders/{{ po.id }}/delete" method="POST" class="d-inline">
+    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this purchase order?');">Delete Purchase Order</button>
+</form>
+<a href="/purchase_orders" class="btn btn-secondary ms-2">Back to Purchase Orders</a>
+
+<h4 class="mt-4">Items</h4>
+<ul class="list-group">
+    {% for item in po.items %}
+    <li class="list-group-item">
+        <a href="/purchase_order_items/{{ item.id }}">{{ item.description }}</a> - Qty: {{ item.quantity }}, Rate: {{ item.rate }}, Sub Total: {{ item.sub_total }}
+    </li>
+    {% else %}
+    <li class="list-group-item">No items for this purchase order.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

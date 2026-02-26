@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}
+{% if po %}Edit Purchase Order{% else %}Add Purchase Order{% endif %} - EMSolar
+{% endblock %}
+
+{% block content %}
+<h2 class="mb-3">{% if po %}Edit Purchase Order{% else %}Add New Purchase Order{% endif %}</h2>
+<form method="POST" action="{% if po %}/purchase_orders/{{ po.id }}/edit{% else %}/purchase_orders{% endif %}">
+    <div class="mb-3">
+        <label for="po_number" class="form-label">PO Number</label>
+        <input type="text" class="form-control" id="po_number" name="po_number" value="{{ po.po_number if po else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="po_date" class="form-label">PO Date</label>
+        <input type="date" class="form-control" id="po_date" name="po_date" value="{{ po.po_date if po else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="vendor_name" class="form-label">Vendor Name</label>
+        <input type="text" class="form-control" id="vendor_name" name="vendor_name" value="{{ po.vendor_name if po else '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="vendor_code" class="form-label">Vendor Code</label>
+        <input type="text" class="form-control" id="vendor_code" name="vendor_code" value="{{ po.vendor_code if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="shipped_to_name" class="form-label">Shipped To Name</label>
+        <input type="text" class="form-control" id="shipped_to_name" name="shipped_to_name" value="{{ po.shipped_to_name if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="shipped_to_address" class="form-label">Shipped To Address</label>
+        <input type="text" class="form-control" id="shipped_to_address" name="shipped_to_address" value="{{ po.shipped_to_address if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="bill_to_name" class="form-label">Bill To Name</label>
+        <input type="text" class="form-control" id="bill_to_name" name="bill_to_name" value="{{ po.bill_to_name if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="bill_to_address" class="form-label">Bill To Address</label>
+        <input type="text" class="form-control" id="bill_to_address" name="bill_to_address" value="{{ po.bill_to_address if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="total_tax_amount" class="form-label">Total Tax Amount</label>
+        <input type="number" step="0.01" class="form-control" id="total_tax_amount" name="total_tax_amount" value="{{ po.total_tax_amount if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="grand_total" class="form-label">Grand Total</label>
+        <input type="number" step="0.01" class="form-control" id="grand_total" name="grand_total" value="{{ po.grand_total if po else '' }}">
+    </div>
+
+    <h4 class="mt-4">Additional PO Details</h4>
+    <div class="mb-3">
+        <label for="iec_code_no" class="form-label">IEC Code No.</label>
+        <input type="text" class="form-control" id="iec_code_no" name="iec_code_no" value="{{ po.iec_code_no if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="contact_person" class="form-label">Contact Person</label>
+        <input type="text" class="form-control" id="contact_person" name="contact_person" value="{{ po.contact_person if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="contact_email_id" class="form-label">Contact Email ID</label>
+        <input type="email" class="form-control" id="contact_email_id" name="contact_email_id" value="{{ po.contact_email_id if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="payment_terms" class="form-label">Payment Terms</label>
+        <input type="text" class="form-control" id="payment_terms" name="payment_terms" value="{{ po.payment_terms if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="inco_terms" class="form-label">Inco Terms</label>
+        <input type="text" class="form-control" id="inco_terms" name="inco_terms" value="{{ po.inco_terms if po else '' }}">
+    </div>
+    <div class="mb-3">
+        <label for="header_text" class="form-label">Header Text</label>
+        <textarea class="form-control" id="header_text" name="header_text" rows="3">{{ po.header_text if po else '' }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">{% if po %}Update Purchase Order{% else %}Add Purchase Order{% endif %}</button>
+    <a href="/purchase_orders" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}
