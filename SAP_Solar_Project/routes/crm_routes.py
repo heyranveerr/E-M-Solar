@@ -12,13 +12,37 @@ crm_bp = Blueprint('crm', __name__)
 @login_required
 def crm():
     is_admin = current_user.username == 'admin'
+    
+    # Get filter parameters
+    ivrs_filter = request.args.get('ivrs_filter', '').strip()
+    employee_filter = request.args.get('employee_filter', '').strip()
+    customer_filter = request.args.get('customer_filter', '').strip()
+    date_order = request.args.get('date_order', 'desc')
+    
+    # Base query
     if is_admin:
-        crm_entries = CRM.query.filter(CRM.is_non_responding == False).order_by(CRM.created_at.desc()).all()
+        query = CRM.query.filter(CRM.is_non_responding == False)
     else:
-        crm_entries = CRM.query.filter(
+        query = CRM.query.filter(
             (CRM.is_non_responding == False) & 
             ((CRM.is_closed == False) | (CRM.assigned_to_id == current_user.id))
-        ).order_by(CRM.created_at.desc()).all()
+        )
+    
+    # Apply filters
+    if ivrs_filter:
+        query = query.filter(CRM.ivrs_number.ilike(f'%{ivrs_filter}%'))
+    if employee_filter:
+        query = query.filter(CRM.employee_name.ilike(f'%{employee_filter}%'))
+    if customer_filter:
+        query = query.filter(CRM.customer_name.ilike(f'%{customer_filter}%'))
+    
+    # Apply sorting
+    if date_order == 'asc':
+        query = query.order_by(CRM.date.asc())
+    else:
+        query = query.order_by(CRM.date.desc())
+    
+    crm_entries = query.all()
     return render_template('crm.html', crm_entries=crm_entries, is_admin=is_admin)
 
 @crm_bp.route('/crm/add', methods=['GET', 'POST'])
@@ -26,12 +50,29 @@ def crm():
 def add_crm():
     if request.method == 'POST':
         employee_name = request.form.get('employee_name')
+        calling_by = request.form.get('calling_by')
         customer_name = request.form.get('customer_name')
+        address = request.form.get('address')
+        pincode = request.form.get('pincode')
+        mobile_number = request.form.get('mobile_number')
         date_str = request.form.get('date')
         description = request.form.get('description')
         price_str = request.form.get('price')
         status = request.form.get('status')
-        ivrm_number = request.form.get('ivrm_number')
+        ivrs_number = request.form.get('ivrs_number')
+        
+        # Existing connection details
+        connection_category = request.form.get('connection_category')
+        arrears = request.form.get('arrears')
+        connection_phase = request.form.get('connection_phase')
+        connected_load = request.form.get('connected_load')
+        connected_load_unit = request.form.get('connected_load_unit')
+        
+        # Meter Details
+        meter_identifier = request.form.get('meter_identifier')
+        meter_make = request.form.get('meter_make')
+        meter_type = request.form.get('meter_type')
+        meter_capacity = request.form.get('meter_capacity')
 
         if current_user.username == 'admin' and not employee_name:
             employee_name = current_user.username
@@ -54,12 +95,25 @@ def add_crm():
 
         new_crm = CRM(
             employee_name=employee_name,
+            calling_by=calling_by,
             customer_name=customer_name,
+            address=address,
+            pincode=pincode,
+            mobile_number=mobile_number,
             date=date,
             description=description,
             price=price,
             status=status,
-            ivrm_number=ivrm_number
+            ivrs_number=ivrs_number,
+            connection_category=connection_category,
+            arrears=arrears,
+            connection_phase=connection_phase,
+            connected_load=connected_load,
+            connected_load_unit=connected_load_unit,
+            meter_identifier=meter_identifier,
+            meter_make=meter_make,
+            meter_type=meter_type,
+            meter_capacity=meter_capacity
         )
         if current_user.username != 'admin':
             new_crm.assigned_to_id = current_user.id
@@ -86,12 +140,29 @@ def edit_crm(id):
 
     if request.method == 'POST':
         employee_name = request.form.get('employee_name')
+        calling_by = request.form.get('calling_by')
         customer_name = request.form.get('customer_name')
+        address = request.form.get('address')
+        pincode = request.form.get('pincode')
+        mobile_number = request.form.get('mobile_number')
         date_str = request.form.get('date')
         description = request.form.get('description')
         price_str = request.form.get('price')
         status = request.form.get('status')
-        ivrm_number = request.form.get('ivrm_number')
+        ivrs_number = request.form.get('ivrs_number')
+        
+        # Existing connection details
+        connection_category = request.form.get('connection_category')
+        arrears = request.form.get('arrears')
+        connection_phase = request.form.get('connection_phase')
+        connected_load = request.form.get('connected_load')
+        connected_load_unit = request.form.get('connected_load_unit')
+        
+        # Meter Details
+        meter_identifier = request.form.get('meter_identifier')
+        meter_make = request.form.get('meter_make')
+        meter_type = request.form.get('meter_type')
+        meter_capacity = request.form.get('meter_capacity')
 
         if not all([employee_name, customer_name, date_str, description, status]):
             flash('All required fields must be filled')
@@ -111,12 +182,25 @@ def edit_crm(id):
 
         # Update the existing entry directly
         crm_entry.employee_name = employee_name
+        crm_entry.calling_by = calling_by
         crm_entry.customer_name = customer_name
+        crm_entry.address = address
+        crm_entry.pincode = pincode
+        crm_entry.mobile_number = mobile_number
         crm_entry.date = date
         crm_entry.description = description
         crm_entry.price = price
         crm_entry.status = status
-        crm_entry.ivrm_number = ivrm_number
+        crm_entry.ivrs_number = ivrs_number
+        crm_entry.connection_category = connection_category
+        crm_entry.arrears = arrears
+        crm_entry.connection_phase = connection_phase
+        crm_entry.connected_load = connected_load
+        crm_entry.connected_load_unit = connected_load_unit
+        crm_entry.meter_identifier = meter_identifier
+        crm_entry.meter_make = meter_make
+        crm_entry.meter_type = meter_type
+        crm_entry.meter_capacity = meter_capacity
         crm_entry.updated_at = datetime.utcnow()
         
         db.session.commit()
@@ -222,13 +306,37 @@ def add_remark(id):
 @login_required
 def non_responding_customers():
     is_admin = current_user.username == 'admin'
+    
+    # Get filter parameters
+    ivrs_filter = request.args.get('ivrs_filter', '').strip()
+    employee_filter = request.args.get('employee_filter', '').strip()
+    customer_filter = request.args.get('customer_filter', '').strip()
+    date_order = request.args.get('date_order', 'desc')
+    
+    # Base query
     if is_admin:
-        crm_entries = CRM.query.filter(CRM.is_non_responding == True).order_by(CRM.marked_non_responding_at.desc()).all()
+        query = CRM.query.filter(CRM.is_non_responding == True)
     else:
-        crm_entries = CRM.query.filter(
+        query = CRM.query.filter(
             (CRM.is_non_responding == True) & 
             ((CRM.is_closed == False) | (CRM.assigned_to_id == current_user.id))
-        ).order_by(CRM.marked_non_responding_at.desc()).all()
+        )
+    
+    # Apply filters
+    if ivrs_filter:
+        query = query.filter(CRM.ivrs_number.ilike(f'%{ivrs_filter}%'))
+    if employee_filter:
+        query = query.filter(CRM.employee_name.ilike(f'%{employee_filter}%'))
+    if customer_filter:
+        query = query.filter(CRM.customer_name.ilike(f'%{customer_filter}%'))
+    
+    # Apply sorting
+    if date_order == 'asc':
+        query = query.order_by(CRM.date.asc())
+    else:
+        query = query.order_by(CRM.date.desc())
+    
+    crm_entries = query.all()
     return render_template('non_responding_customers.html', crm_entries=crm_entries, is_admin=is_admin)
 
 @crm_bp.route('/crm/mark_non_responding/<int:id>', methods=['POST'])
@@ -427,3 +535,35 @@ def mark_reminder_seen(reminder_id):
 def dismiss_reminder(id):
     """This endpoint is now unused - dismissal is handled client-side"""
     return redirect(url_for('crm.crm'))
+
+@crm_bp.route('/crm/lookup_ivrs/<ivrs_number>', methods=['GET'])
+@login_required
+def lookup_ivrs(ivrs_number):
+    """Look up customer details by IVRS number"""
+    try:
+        # Find the most recent CRM entry with this IVRS number
+        crm_entry = CRM.query.filter(CRM.ivrs_number == ivrs_number).order_by(CRM.created_at.desc()).first()
+        
+        if crm_entry:
+            return jsonify({
+                'success': True,
+                'calling_by': crm_entry.calling_by if crm_entry.calling_by else '',
+                'customer_name': crm_entry.customer_name,
+                'mobile_number': crm_entry.mobile_number if crm_entry.mobile_number else '',
+                'address': crm_entry.address if crm_entry.address else '',
+                'pincode': crm_entry.pincode if crm_entry.pincode else '',
+                'connection_category': crm_entry.connection_category if crm_entry.connection_category else '',
+                'arrears': crm_entry.arrears if crm_entry.arrears else '',
+                'connection_phase': crm_entry.connection_phase if crm_entry.connection_phase else '',
+                'connected_load': crm_entry.connected_load if crm_entry.connected_load else '',
+                'connected_load_unit': crm_entry.connected_load_unit if crm_entry.connected_load_unit else '',
+                'meter_identifier': crm_entry.meter_identifier if crm_entry.meter_identifier else '',
+                'meter_make': crm_entry.meter_make if crm_entry.meter_make else '',
+                'meter_type': crm_entry.meter_type if crm_entry.meter_type else '',
+                'meter_capacity': crm_entry.meter_capacity if crm_entry.meter_capacity else ''
+            })
+        else:
+            return jsonify({'success': False, 'message': 'IVRS number not found'})
+    except Exception as e:
+        print(f"Error looking up IVRS: {e}")
+        return jsonify({'success': False, 'error': str(e)})

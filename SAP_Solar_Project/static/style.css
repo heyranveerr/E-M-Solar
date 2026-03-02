@@ -233,8 +233,19 @@ h1 {
 
 .table-responsive {
   border-radius: var(--radius-md);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   box-shadow: var(--shadow-sm);
+}
+
+.table-responsive .table {
+  min-width: 1200px;
+}
+
+.table-responsive .table th:last-child,
+.table-responsive .table td:last-child {
+  white-space: nowrap;
+  min-width: 220px;
 }
 
 /* Table Row Colors */

@@ -70,6 +70,9 @@ def create_app(config_class=Config):
     from routes.crm_routes import crm_bp
     app.register_blueprint(crm_bp)
 
+    from routes.attendance_routes import attendance_bp
+    app.register_blueprint(attendance_bp)
+
     return app
 
 def init_db():

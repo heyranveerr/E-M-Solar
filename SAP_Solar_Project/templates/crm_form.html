@@ -23,12 +23,32 @@
 
           <form method="POST">
             <div class="mb-3">
+              <label for="ivrs_number" class="form-label">IVRS Number</label>
+              <input type="text" class="form-control" id="ivrs_number" name="ivrs_number" value="{% if crm_entry %}{{ crm_entry.ivrs_number }}{% endif %}">
+            </div>
+            <div class="mb-3">
+              <label for="calling_by" class="form-label">Calling by</label>
+              <input type="text" class="form-control" id="calling_by" name="calling_by" value="{% if crm_entry %}{{ crm_entry.calling_by }}{% endif %}">
+            </div>
+            <div class="mb-3">
               <label for="employee_name" class="form-label">Employee Name</label>
               <input type="text" class="form-control" id="employee_name" name="employee_name" value="{% if crm_entry %}{{ crm_entry.employee_name }}{% endif %}" {% if current_user.username != 'admin' %}required{% endif %}>
             </div>
             <div class="mb-3">
               <label for="customer_name" class="form-label">Customer Name</label>
               <input type="text" class="form-control" id="customer_name" name="customer_name" value="{% if crm_entry %}{{ crm_entry.customer_name }}{% endif %}" required>
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">Address</label>
+              <input type="text" class="form-control" id="address" name="address" value="{% if crm_entry %}{{ crm_entry.address }}{% endif %}">
+            </div>
+            <div class="mb-3">
+              <label for="pincode" class="form-label">Pincode</label>
+              <input type="text" class="form-control" id="pincode" name="pincode" value="{% if crm_entry %}{{ crm_entry.pincode }}{% endif %}">
+            </div>
+            <div class="mb-3">
+              <label for="mobile_number" class="form-label">Mobile Number</label>
+              <input type="text" class="form-control" id="mobile_number" name="mobile_number" value="{% if crm_entry %}{{ crm_entry.mobile_number }}{% endif %}">
             </div>
             <div class="mb-3">
               <label for="date" class="form-label">Date</label>
@@ -51,10 +71,65 @@
                 <option value="Cancelled" {% if crm_entry and crm_entry.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
               </select>
             </div>
+
+            <!-- Existing Connection Details Section -->
             <div class="mb-3">
-              <label for="ivrm_number" class="form-label">IVRM Number</label>
-              <input type="text" class="form-control" id="ivrm_number" name="ivrm_number" value="{% if crm_entry %}{{ crm_entry.ivrm_number }}{% endif %}">
+              <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#connectionDetails" aria-expanded="false" aria-controls="connectionDetails">
+                <i class="bi bi-chevron-down"></i> Existing Connection Details
+              </button>
             </div>
+            <div class="collapse mb-4" id="connectionDetails">
+              <div class="border p-3 rounded">
+                <div class="mb-3">
+                  <label for="connection_category" class="form-label">Connection Category</label>
+                  <input type="text" class="form-control" id="connection_category" name="connection_category" value="{% if crm_entry %}{{ crm_entry.connection_category }}{% endif %}">
+                </div>
+                <div class="mb-3">
+                  <label for="arrears" class="form-label">Arrears</label>
+                  <input type="text" class="form-control" id="arrears" name="arrears" value="{% if crm_entry %}{{ crm_entry.arrears }}{% endif %}">
+                </div>
+                <div class="mb-3">
+                  <label for="connection_phase" class="form-label">Connection Phase</label>
+                  <input type="text" class="form-control" id="connection_phase" name="connection_phase" value="{% if crm_entry %}{{ crm_entry.connection_phase }}{% endif %}">
+                </div>
+                <div class="mb-3">
+                  <label for="connected_load" class="form-label">Connected Load</label>
+                  <input type="text" class="form-control" id="connected_load" name="connected_load" value="{% if crm_entry %}{{ crm_entry.connected_load }}{% endif %}">
+                </div>
+                <div class="mb-3">
+                  <label for="connected_load_unit" class="form-label">Connected Load Unit</label>
+                  <input type="text" class="form-control" id="connected_load_unit" name="connected_load_unit" value="{% if crm_entry %}{{ crm_entry.connected_load_unit }}{% endif %}">
+                </div>
+              </div>
+            </div>
+
+            <!-- Meter Details Section -->
+            <div class="mb-3">
+              <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#meterDetails" aria-expanded="false" aria-controls="meterDetails">
+                <i class="bi bi-chevron-down"></i> Meter Details
+              </button>
+            </div>
+            <div class="collapse mb-4" id="meterDetails">
+              <div class="border p-3 rounded">
+                <div class="mb-3">
+                  <label for="meter_identifier" class="form-label">Meter Identifier</label>
+                  <input type="text" class="form-control" id="meter_identifier" name="meter_identifier" value="{% if crm_entry %}{{ crm_entry.meter_identifier }}{% endif %}">
+                </div>
+                <div class="mb-3">
+                  <label for="meter_make" class="form-label">Meter Make</label>
+                  <input type="text" class="form-control" id="meter_make" name="meter_make" value="{% if crm_entry %}{{ crm_entry.meter_make }}{% endif %}">
+                </div>
+                <div class="mb-3">
+                  <label for="meter_type" class="form-label">Meter Type</label>
+                  <input type="text" class="form-control" id="meter_type" name="meter_type" value="{% if crm_entry %}{{ crm_entry.meter_type }}{% endif %}">
+                </div>
+                <div class="mb-3">
+                  <label for="meter_capacity" class="form-label">Meter Capacity</label>
+                  <input type="text" class="form-control" id="meter_capacity" name="meter_capacity" value="{% if crm_entry %}{{ crm_entry.meter_capacity }}{% endif %}">
+                </div>
+              </div>
+            </div>
+
             <button type="submit" class="btn btn-primary">{% if crm_entry %}Update{% else %}Add{% endif %} Entry</button>
             <a href="{{ url_for('crm.crm') }}" class="btn btn-secondary">Cancel</a>
           </form>
@@ -148,4 +223,94 @@
           {% endif %}
         </div>
       </div>
+
+      <script>
+        // Auto-fill customer details when IVRS number is entered
+        document.getElementById('ivrs_number').addEventListener('blur', function() {
+          const ivrsNumber = this.value.trim();
+          
+          if (ivrsNumber && !document.querySelector('form').dataset.editing) {
+            // Only auto-fill if we're adding a new entry (not editing)
+            fetch(`{{ url_for('crm.lookup_ivrs', ivrs_number='PLACEHOLDER') }}`.replace('PLACEHOLDER', encodeURIComponent(ivrsNumber)))
+              .then(response => response.json())
+              .then(data => {
+                if (data.success) {
+                  // Only fill if the field is empty
+                  const callingByField = document.getElementById('calling_by');
+                  const customerNameField = document.getElementById('customer_name');
+                  const mobileNumberField = document.getElementById('mobile_number');
+                  const addressField = document.getElementById('address');
+                  const pincodeField = document.getElementById('pincode');
+                  const connectionCategoryField = document.getElementById('connection_category');
+                  const arrearsField = document.getElementById('arrears');
+                  const connectionPhaseField = document.getElementById('connection_phase');
+                  const connectedLoadField = document.getElementById('connected_load');
+                  const connectedLoadUnitField = document.getElementById('connected_load_unit');
+                  const meterIdentifierField = document.getElementById('meter_identifier');
+                  const meterMakeField = document.getElementById('meter_make');
+                  const meterTypeField = document.getElementById('meter_type');
+                  const meterCapacityField = document.getElementById('meter_capacity');
+                  
+                  // Fill calling_by
+                  if (!callingByField.value && data.calling_by) {
+                    callingByField.value = data.calling_by;
+                  }
+                  
+                  // Fill customer details
+                  if (!customerNameField.value && data.customer_name) {
+                    customerNameField.value = data.customer_name;
+                  }
+                  if (!mobileNumberField.value && data.mobile_number) {
+                    mobileNumberField.value = data.mobile_number;
+                  }
+                  if (!addressField.value && data.address) {
+                    addressField.value = data.address;
+                  }
+                  if (!pincodeField.value && data.pincode) {
+                    pincodeField.value = data.pincode;
+                  }
+                  
+                  // Fill connection details
+                  if (!connectionCategoryField.value && data.connection_category) {
+                    connectionCategoryField.value = data.connection_category;
+                  }
+                  if (!arrearsField.value && data.arrears) {
+                    arrearsField.value = data.arrears;
+                  }
+                  if (!connectionPhaseField.value && data.connection_phase) {
+                    connectionPhaseField.value = data.connection_phase;
+                  }
+                  if (!connectedLoadField.value && data.connected_load) {
+                    connectedLoadField.value = data.connected_load;
+                  }
+                  if (!connectedLoadUnitField.value && data.connected_load_unit) {
+                    connectedLoadUnitField.value = data.connected_load_unit;
+                  }
+                  
+                  // Fill meter details
+                  if (!meterIdentifierField.value && data.meter_identifier) {
+                    meterIdentifierField.value = data.meter_identifier;
+                  }
+                  if (!meterMakeField.value && data.meter_make) {
+                    meterMakeField.value = data.meter_make;
+                  }
+                  if (!meterTypeField.value && data.meter_type) {
+                    meterTypeField.value = data.meter_type;
+                  }
+                  if (!meterCapacityField.value && data.meter_capacity) {
+                    meterCapacityField.value = data.meter_capacity;
+                  }
+                }
+              })
+              .catch(error => {
+                console.error('Error looking up IVRS:', error);
+              });
+          }
+        });
+
+        // Mark form as editing if we're editing an existing entry
+        {% if crm_entry %}
+        document.querySelector('form').dataset.editing = 'true';
+        {% endif %}
+      </script>
 {% endblock %}
