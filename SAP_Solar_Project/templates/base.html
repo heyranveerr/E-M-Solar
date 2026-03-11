@@ -33,6 +33,16 @@
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('attendance.attendance') }}">Attendance</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('payroll.payroll_home') }}">Payroll</a>
+            </li>
+            {% if current_user.is_authenticated and current_user.role == 'admin' %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('manage_employees') }}">
+                <i class="bi bi-people-fill me-1"></i>Employees
+              </a>
+            </li>
+            {% endif %}
           </ul>
           <ul class="navbar-nav">
             {% if current_user.is_authenticated %}
@@ -46,6 +56,7 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end" id="reminderDropdown" style="max-height: 400px; overflow-y: auto; min-width: 350px;">
                   <div class="dropdown-header">Reminders</div>
+                  <div id="pendingLeavesContainer"></div>
                   <div id="reminderUnseenContainer"></div>
                   <div id="reminderSeenContainer"></div>
                   <div id="reminderEmptyState">
@@ -75,7 +86,7 @@
     <div class="modal fade" id="reminderModal" tabindex="-1" aria-labelledby="reminderModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
-          <div class="modal-header bg-warning">
+          <div class="modal-header bg-dark text-white">
             <h5 class="modal-title" id="reminderModalLabel">
               <i class="bi bi-bell-fill"></i> CRM Reminders
             </h5>
@@ -97,93 +108,124 @@
     <script>
       // Load reminders for bell icon
       function loadReminders() {
-        fetch('/crm/get_all_reminders')
-          .then(response => response.json())
-          .then(data => {
-            if (data.success) {
-              const unseenContainer = document.getElementById('reminderUnseenContainer');
-              const seenContainer = document.getElementById('reminderSeenContainer');
-              const badge = document.getElementById('reminderBadge');
-              const emptyState = document.getElementById('reminderEmptyState');
-              
-              unseenContainer.innerHTML = '';
-              seenContainer.innerHTML = '';
-              
-              // Show unseen reminders
-              if (data.unseen && data.unseen.length > 0) {
-                const unseenHeader = document.createElement('div');
-                unseenHeader.className = 'dropdown-header small text-secondary';
-                unseenHeader.textContent = 'Unseen Reminders';
-                unseenContainer.appendChild(unseenHeader);
-                
-                data.unseen.forEach(reminder => {
-                  const item = document.createElement('a');
-                  item.href = '/crm/edit/' + reminder.crm_id;
-                  item.className = 'dropdown-item';
-                  item.style.backgroundColor = '#E3F2FD';
-                  item.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-start">
-                      <div style="flex: 1;">
-                        <strong>${reminder.crm_name}</strong><br>
-                        <small>${reminder.reminder_date}</small><br>
-                        <small class="text-muted">${reminder.reminder_text}</small>
-                      </div>
+        const unseenContainer = document.getElementById('reminderUnseenContainer');
+        const seenContainer = document.getElementById('reminderSeenContainer');
+        const leavesContainer = document.getElementById('pendingLeavesContainer');
+        const badge = document.getElementById('reminderBadge');
+        const emptyState = document.getElementById('reminderEmptyState');
+
+        let reminderCount = 0;
+        let leaveCount = 0;
+
+        // Fetch CRM reminders and pending leaves in parallel
+        Promise.all([
+          fetch('/crm/get_all_reminders').then(r => r.json()).catch(() => ({success: false})),
+          fetch('/payroll/get_pending_leaves').then(r => r.json()).catch(() => ({leaves: [], count: 0}))
+        ]).then(([reminderData, leaveData]) => {
+          unseenContainer.innerHTML = '';
+          seenContainer.innerHTML = '';
+          leavesContainer.innerHTML = '';
+
+          // Pending leave requests section (admin only)
+          if (leaveData.leaves && leaveData.leaves.length > 0) {
+            leaveCount = leaveData.leaves.length;
+            const leaveHeader = document.createElement('div');
+            leaveHeader.className = 'dropdown-header small text-secondary';
+            leaveHeader.textContent = 'Pending Leave Requests';
+            leavesContainer.appendChild(leaveHeader);
+
+            leaveData.leaves.forEach(leave => {
+              const item = document.createElement('a');
+              item.href = '/payroll/admin';
+              item.className = 'dropdown-item';
+              item.style.backgroundColor = '#FFF3E0';
+              item.innerHTML = `
+                <div class="d-flex align-items-start">
+                  <i class="bi bi-calendar-x me-2 text-warning mt-1"></i>
+                  <div>
+                    <strong>${leave.employee_name}</strong><br>
+                    <small>${leave.start_date} to ${leave.end_date}</small><br>
+                    <small class="text-muted">${leave.subject}</small>
+                  </div>
+                </div>
+              `;
+              leavesContainer.appendChild(item);
+            });
+
+            const divider = document.createElement('div');
+            divider.className = 'dropdown-divider';
+            leavesContainer.appendChild(divider);
+          }
+
+          // CRM Reminders section
+          if (reminderData.success) {
+            if (reminderData.unseen && reminderData.unseen.length > 0) {
+              reminderCount = reminderData.unseen_count || reminderData.unseen.length;
+              const unseenHeader = document.createElement('div');
+              unseenHeader.className = 'dropdown-header small text-secondary';
+              unseenHeader.textContent = 'Unseen Reminders';
+              unseenContainer.appendChild(unseenHeader);
+
+              reminderData.unseen.forEach(reminder => {
+                const item = document.createElement('a');
+                item.href = '/crm/edit/' + reminder.crm_id;
+                item.className = 'dropdown-item';
+                item.style.backgroundColor = '#E3F2FD';
+                item.innerHTML = `
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div style="flex: 1;">
+                      <strong>${reminder.crm_name}</strong><br>
+                      <small>${reminder.reminder_date}</small><br>
+                      <small class="text-muted">${reminder.reminder_text}</small>
                     </div>
-                  `;
-                  
-                  item.addEventListener('click', function(e) {
-                    // Mark as seen when clicked
-                    fetch('/crm/mark_reminder_seen/' + reminder.id, {method: 'POST'})
-                      .then(() => loadReminders());
-                  });
-                  
-                  unseenContainer.appendChild(item);
+                  </div>
+                `;
+                item.addEventListener('click', function(e) {
+                  fetch('/crm/mark_reminder_seen/' + reminder.id, {method: 'POST'})
+                    .then(() => loadReminders());
                 });
-              }
-              
-              // Show seen reminders
-              if (data.seen && data.seen.length > 0) {
-                const seenHeader = document.createElement('div');
-                seenHeader.className = 'dropdown-header small text-secondary';
-                seenHeader.textContent = 'Seen Reminders';
-                seenContainer.appendChild(seenHeader);
-                
-                data.seen.forEach(reminder => {
-                  const item = document.createElement('a');
-                  item.href = '/crm/edit/' + reminder.crm_id;
-                  item.className = 'dropdown-item';
-                  item.style.backgroundColor = 'white';
-                  item.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-start">
-                      <div style="flex: 1;">
-                        <strong>${reminder.crm_name}</strong><br>
-                        <small>${reminder.reminder_date}</small><br>
-                        <small class="text-muted">${reminder.reminder_text}</small>
-                      </div>
-                    </div>
-                  `;
-                  
-                  seenContainer.appendChild(item);
-                });
-              }
-              
-              // Show/hide empty state
-              if (data.unseen.length === 0 && data.seen.length === 0) {
-                emptyState.style.display = 'block';
-              } else {
-                emptyState.style.display = 'none';
-              }
-              
-              // Update badge
-              if (data.unseen_count > 0) {
-                badge.textContent = data.unseen_count;
-                badge.style.display = 'inline-block';
-              } else {
-                badge.style.display = 'none';
-              }
+                unseenContainer.appendChild(item);
+              });
             }
-          })
-          .catch(error => console.error('Error loading reminders:', error));
+
+            if (reminderData.seen && reminderData.seen.length > 0) {
+              const seenHeader = document.createElement('div');
+              seenHeader.className = 'dropdown-header small text-secondary';
+              seenHeader.textContent = 'Seen Reminders';
+              seenContainer.appendChild(seenHeader);
+
+              reminderData.seen.forEach(reminder => {
+                const item = document.createElement('a');
+                item.href = '/crm/edit/' + reminder.crm_id;
+                item.className = 'dropdown-item';
+                item.style.backgroundColor = 'white';
+                item.innerHTML = `
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div style="flex: 1;">
+                      <strong>${reminder.crm_name}</strong><br>
+                      <small>${reminder.reminder_date}</small><br>
+                      <small class="text-muted">${reminder.reminder_text}</small>
+                    </div>
+                  </div>
+                `;
+                seenContainer.appendChild(item);
+              });
+            }
+          }
+
+          // Empty state
+          const totalItems = leaveCount + (reminderData.success ? (reminderData.unseen || []).length + (reminderData.seen || []).length : 0);
+          emptyState.style.display = totalItems === 0 ? 'block' : 'none';
+
+          // Badge shows total pending count
+          const totalBadge = leaveCount + reminderCount;
+          if (totalBadge > 0) {
+            badge.textContent = totalBadge;
+            badge.style.display = 'inline-block';
+          } else {
+            badge.style.display = 'none';
+          }
+        }).catch(error => console.error('Error loading notifications:', error));
       }
       
       // Load reminders on page load
@@ -198,64 +240,86 @@
           });
         }
         
-        // Check for pending reminders and show modal only once per login session
-        console.log('Checking for pending reminders...');
+        // Check for pending reminders/leaves and show modal once per day
+        const todayKey = 'notifModalShown_' + new Date().toISOString().slice(0, 10);
         
-        // Check if modal has already been shown in this session
-        if (!sessionStorage.getItem('reminderModalShown')) {
-          fetch('/crm/get_pending_reminders')
-            .then(response => {
-              console.log('Response status:', response.status);
-              return response.json();
-            })
-            .then(data => {
-              console.log('Today reminders data:', data);
-              if (data.reminders && data.reminders.length > 0) {
-                console.log('Found ' + data.reminders.length + ' today reminders');
-                const modalBody = document.getElementById('reminderModalBody');
-                if (!modalBody) {
-                  console.error('Modal body element not found!');
-                  return;
-                }
-                
-                modalBody.innerHTML = '';
-                
-                data.reminders.forEach(reminder => {
-                  console.log('Adding reminder:', reminder);
-                  const reminderCard = document.createElement('div');
-                  reminderCard.className = 'card mb-3';
-                  reminderCard.innerHTML = `
-                    <div class="card-body">
-                      <h6 class="card-title">CRM: ${reminder.crm_name}</h6>
-                      <p class="card-text"><strong>Date:</strong> ${reminder.reminder_date}</p>
-                      <p class="card-text">${reminder.reminder_text}</p>
-                      <a href="/crm/edit/${reminder.crm_id}" class="btn btn-sm btn-outline-primary">View CRM</a>
-                    </div>
-                  `;
-                  modalBody.appendChild(reminderCard);
-                });
-                
-                // Show the modal
-                const reminderModalElement = document.getElementById('reminderModal');
-                if (reminderModalElement) {
-                  const reminderModal = new bootstrap.Modal(reminderModalElement);
-                  reminderModal.show();
-                  console.log('Modal shown');
-                  
-                  // Mark that modal has been shown in this session
-                  sessionStorage.setItem('reminderModalShown', 'true');
-                } else {
-                  console.error('Modal element not found!');
-                }
-              } else {
-                console.log('No today reminders found or no reminders array');
+        if (!sessionStorage.getItem(todayKey)) {
+          Promise.all([
+            fetch('/crm/get_pending_reminders').then(r => r.json()).catch(() => ({reminders: []})),
+            fetch('/payroll/get_pending_leaves').then(r => r.json()).catch(() => ({leaves: []}))
+          ]).then(([crmData, leaveData]) => {
+            const crmReminders = (crmData.reminders || []);
+            const pendingLeaves = (leaveData.leaves || []);
+
+            if (crmReminders.length === 0 && pendingLeaves.length === 0) return;
+
+            const modalBody = document.getElementById('reminderModalBody');
+            if (!modalBody) return;
+            modalBody.innerHTML = '';
+
+            // Pending leave requests section
+            if (pendingLeaves.length > 0) {
+              const leaveHeading = document.createElement('h6');
+              leaveHeading.className = 'text-warning mb-2';
+              leaveHeading.innerHTML = '<i class="bi bi-calendar-x me-1"></i> Pending Leave Requests';
+              modalBody.appendChild(leaveHeading);
+
+              pendingLeaves.forEach(leave => {
+                const card = document.createElement('div');
+                card.className = 'card mb-2 border-warning';
+                card.innerHTML = `
+                  <div class="card-body py-2">
+                    <strong>${leave.employee_name}</strong>
+                    <span class="text-muted ms-2">${leave.start_date} to ${leave.end_date}</span><br>
+                    <small>${leave.subject}</small>
+                    <a href="/payroll/admin" class="btn btn-sm btn-outline-warning ms-2">Review</a>
+                  </div>
+                `;
+                modalBody.appendChild(card);
+              });
+            }
+
+            // CRM reminders section
+            if (crmReminders.length > 0) {
+              if (pendingLeaves.length > 0) {
+                const hr = document.createElement('hr');
+                modalBody.appendChild(hr);
               }
-            })
-            .catch(error => {
-              console.error('Error fetching reminders:', error);
-            });
-        } else {
-          console.log('Modal already shown in this session');
+              const crmHeading = document.createElement('h6');
+              crmHeading.className = 'text-primary mb-2';
+              crmHeading.innerHTML = '<i class="bi bi-bell me-1"></i> CRM Reminders';
+              modalBody.appendChild(crmHeading);
+
+              crmReminders.forEach(reminder => {
+                const card = document.createElement('div');
+                card.className = 'card mb-2';
+                card.innerHTML = `
+                  <div class="card-body py-2">
+                    <h6 class="card-title mb-1">${reminder.crm_name}</h6>
+                    <p class="card-text mb-1"><small><strong>Date:</strong> ${reminder.reminder_date}</small></p>
+                    <p class="card-text mb-1"><small>${reminder.reminder_text}</small></p>
+                    <a href="/crm/edit/${reminder.crm_id}" class="btn btn-sm btn-outline-primary">View CRM</a>
+                  </div>
+                `;
+                modalBody.appendChild(card);
+              });
+            }
+
+            // Update modal title
+            const modalTitle = document.getElementById('reminderModalLabel');
+            if (modalTitle) {
+              const parts = [];
+              if (pendingLeaves.length > 0) parts.push(`${pendingLeaves.length} Leave Request${pendingLeaves.length > 1 ? 's' : ''}`);
+              if (crmReminders.length > 0) parts.push(`${crmReminders.length} Reminder${crmReminders.length > 1 ? 's' : ''}`);
+              modalTitle.innerHTML = `<i class="bi bi-bell-fill"></i> ${parts.join(' & ')}`;
+            }
+
+            const reminderModalElement = document.getElementById('reminderModal');
+            if (reminderModalElement) {
+              new bootstrap.Modal(reminderModalElement).show();
+              sessionStorage.setItem(todayKey, 'true');
+            }
+          }).catch(error => console.error('Error fetching notifications:', error));
         }
       });
     </script>

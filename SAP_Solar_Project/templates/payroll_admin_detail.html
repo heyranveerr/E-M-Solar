@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Payroll Details - EMSolar{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Payroll Details: {{ employee.username }}</h1>
+    <a href="{{ url_for('payroll.payroll_admin', month=selected_month) }}" class="btn btn-secondary">Back</a>
+  </div>
+
+  <form method="GET" class="row g-3 mb-4">
+    <input type="hidden" name="employee_id" value="{{ employee.id }}">
+    <div class="col-md-3">
+      <label class="form-label">Month</label>
+      <input type="month" class="form-control" name="month" value="{{ selected_month }}">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary">Load</button>
+    </div>
+  </form>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card border-primary"><div class="card-body"><h6>Monthly Salary</h6><h4>Rs {{ "%.2f"|format(totals.monthly_salary) }}</h4></div></div></div>
+    <div class="col-md-3"><div class="card border-danger"><div class="card-body"><h6>Deductions</h6><h4 class="text-danger">Rs {{ "%.2f"|format(totals.deductions) }}</h4></div></div></div>
+    <div class="col-md-3"><div class="card border-success"><div class="card-body"><h6>Incentives</h6><h4 class="text-success">Rs {{ "%.2f"|format(totals.incentives) }}</h4></div></div></div>
+    <div class="col-md-3"><div class="card border-dark"><div class="card-body"><h6>Final Salary</h6><h4>Rs {{ "%.2f"|format(totals.final_salary) }}</h4></div></div></div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header bg-secondary text-white">Daily Attendance and Deduction Breakdown</div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr><th>Date</th><th>Check-In</th><th>Status</th><th>Deduction</th><th>Action</th></tr>
+          </thead>
+          <tbody>
+            {% for row in breakdown %}
+            <tr>
+              <td>{{ row.date.strftime('%Y-%m-%d') }} <span class="text-muted small">({{ row.date.strftime('%A') }})</span></td>
+              <td>{{ row.check_in_time }}</td>
+              <td>{{ row.status }}</td>
+              <td>{% if row.deduction > 0 %}-Rs {{ "%.2f"|format(row.deduction) }}{% else %}0{% endif %}</td>
+              <td>
+                {% if row.deduction_id and row.status not in ['Present', 'Approved Leave'] %}
+                  {% if row.deduction_status == 'DEDUCTED' %}
+                    <form method="POST" action="{{ url_for('payroll.reinstate_deduction', deduction_id=row.deduction_id) }}" class="d-inline">
+                      <button class="btn btn-sm btn-success" type="submit">Reinstate</button>
+                    </form>
+                  {% elif row.deduction_status == 'REINSTATED' %}
+                    <form method="POST" action="{{ url_for('payroll.keep_deduction', deduction_id=row.deduction_id) }}" class="d-inline">
+                      <button class="btn btn-sm btn-danger" type="submit">Keep Deduction</button>
+                    </form>
+                  {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">Monthly Incentives</div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>Reason</th><th>Amount</th></tr></thead>
+          <tbody>
+            {% for item in incentives %}
+            <tr>
+              <td>{{ item.reason or '-' }}</td>
+              <td class="text-success">Rs {{ "%.2f"|format(item.amount) }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="2" class="text-muted">No incentives for this month.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">Leave Approvals</div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>Date Range</th><th>Subject</th><th>Status</th></tr></thead>
+          <tbody>
+            {% for leave in leave_requests %}
+            <tr>
+              <td>{{ leave.start_date.strftime('%Y-%m-%d') }} to {{ leave.end_date.strftime('%Y-%m-%d') }}</td>
+              <td>{{ leave.subject }}</td>
+              <td>{{ leave.status }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" class="text-muted">No leave requests in this month.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

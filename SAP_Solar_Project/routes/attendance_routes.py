@@ -2,9 +2,26 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import login_required, current_user
 from extensions import db
 from models.attendance import Attendance
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 
 attendance_bp = Blueprint('attendance', __name__)
+
+
+LATE_CHECKIN_CUTOFF = time(10, 0)
+
+
+def get_attendance_status(attendance_record):
+    if not attendance_record or not attendance_record.check_in:
+        return 'Absent'
+
+    check_in_time = attendance_record.check_in.time()
+    if check_in_time > LATE_CHECKIN_CUTOFF:
+        return f"Late Check-In ({attendance_record.check_in.strftime('%I:%M %p')})"
+
+    if attendance_record.check_out:
+        return 'Completed'
+
+    return 'In Progress'
 
 @attendance_bp.route('/attendance')
 @login_required
@@ -27,6 +44,11 @@ def attendance():
             (Attendance.employee_id == current_user.id) &
             (Attendance.date >= thirty_days_ago)
         ).order_by(Attendance.date.desc()).all()
+
+        if today_attendance:
+            today_attendance.display_status = get_attendance_status(today_attendance)
+        for record in recent_attendance:
+            record.display_status = get_attendance_status(record)
         
         return render_template('attendance.html', 
                              today_attendance=today_attendance,
@@ -61,6 +83,8 @@ def attendance_admin():
     
     # Get all attendance records
     attendance_records = query.order_by(Attendance.date.desc(), Attendance.check_in.desc()).all()
+    for record in attendance_records:
+        record.display_status = get_attendance_status(record)
     
     # Get all employees for filter dropdown
     from models.user import User
@@ -90,6 +114,8 @@ def attendance_admin():
 @login_required
 def check_in():
     """Employee check-in endpoint"""
+    if current_user.role == 'deleted':
+        return jsonify({'success': False, 'message': 'Account is inactive.'})
     try:
         today = date.today()
         
@@ -112,6 +138,7 @@ def check_in():
             date=today,
             check_in=datetime.now()
         )
+        attendance.status = 'Late Check-In' if attendance.check_in.time() > LATE_CHECKIN_CUTOFF else 'Present'
         
         db.session.add(attendance)
         db.session.commit()
@@ -129,6 +156,8 @@ def check_in():
 @login_required
 def check_out():
     """Employee check-out endpoint"""
+    if current_user.role == 'deleted':
+        return jsonify({'success': False, 'message': 'Account is inactive.'})
     try:
         today = date.today()
         

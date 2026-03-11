@@ -122,12 +122,14 @@
                 {% endif %}
               </td>
               <td>
-                {% if record.check_out %}
+                {% if 'Late Check-In' in record.display_status %}
+                  <span class="badge bg-warning text-dark">{{ record.display_status }}</span>
+                {% elif record.display_status == 'Completed' %}
                   <span class="badge bg-success">Completed</span>
-                {% elif record.check_in %}
+                {% elif record.display_status == 'In Progress' %}
                   <span class="badge bg-info">In Progress</span>
                 {% else %}
-                  <span class="badge bg-secondary">Absent</span>
+                  <span class="badge bg-secondary">{{ record.display_status }}</span>
                 {% endif %}
               </td>
             </tr>

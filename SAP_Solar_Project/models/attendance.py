@@ -7,6 +7,7 @@ class Attendance(db.Model):
     date = db.Column(db.Date, nullable=False)
     check_in = db.Column(db.DateTime, nullable=True)
     check_out = db.Column(db.DateTime, nullable=True)
+    status = db.Column(db.String(20), nullable=False, default='Present')
     total_hours = db.Column(db.Float, nullable=True, default=0.0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
